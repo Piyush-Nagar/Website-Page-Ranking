@@ -6,13 +6,10 @@ import java.util.stream.Collectors;
 
 public class StrengthRatingCalculator {
 
-  private int strength = 8;
+  private int strength;
 
-  public StrengthRatingCalculator() {
-  }
-
-  public Map<String, Integer> getKeyword(List<String> keywords) {
-    int temp = strength;
+  public Map<String, Integer> getKeyword(List<String> keywords, int strengthLocal) {
+    int temp = strength = strengthLocal;
     Map<String, Integer> keywordList = keywords.stream()
         .collect(Collectors.toMap(x -> x, x -> strength--));
     strength = temp;

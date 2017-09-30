@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.List;
 
 public class GenericFileReader {
-  private static final String BANK_DATA_FILE = "Page-To-Keyword.csv";
   private static final Character SEPARATOR = '~';
 
   private GenericFileReader() {

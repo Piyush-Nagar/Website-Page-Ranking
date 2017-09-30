@@ -1,0 +1,129 @@
+app:
+  name: ETL
+  description: Evive's ${app.name} service.
+spring:
+  main:
+    banner-mode: "off"
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  mvc:
+    favicon:
+      enabled: false
+
+metrics:
+  period:
+    unit: SECONDS
+    duration: 5
+  prefix: etl
+  reporter: JMX #CONSOLE
+  host: 127.0.0.1
+  port: 2003
+
+
+dump-path: dump
+print-file: false
+drop.members: true
+clients-with-ClientmemberID: 1013,1011,1006
+etl:
+  pcl-base-url: "https://app1.dev.evivehealth.com/recommender/"
+  stats:
+    type: "etl_counts"
+  errors:
+    type: "etl_errors"
+  index: "etl_stats"
+  batch-size: 500
+insert-to-ES: false
+threads:
+  number: 10
+populate:
+  census:
+    variables:
+      url: http://127.0.0.1:8081/census/variables/member/
+    retry: 3
+    email: sampath@evivehealth.com
+aa:
+  roles-file: "classpath:AA/aa-roles.csv"
+
+THD:
+  invalidMedicalCodeForBestDoctorTag: 3500,0000,6000,6098
+  validCareOptionId: 9601,9602
+
+quest:
+  health:
+    index: "health"
+    type: "health_details"
+df:
+   alpha-preifx: "DFC"
+amgen:
+    medical-plan-id: 00,01,04,05,10,11,13,14,15
+
+redis:
+  nodes: "10.13.1.33:17000" # comma based list
+error:
+  report:
+    file:
+      path: "error_report_hl7_thd.csv"
+
+pcl-enabled-clientcode: 1004,1029
+
+---
+spring:
+  profiles: development
+dump-path: "/opt/evive/var/ETLExceptions"
+
+etl:
+  compute-pcl: "https://10.13.1.31/recommender/pcl/compute"
+  pcl-base-url: "https://10.13.1.31/recommender/"
+notification-report:
+  path: "/opt/evive/var/reports/thd_notification_report"
+populate:
+  census:
+    variables:
+      url: https://app1/recommender/census/variables/member/
+    retry: 3
+    email: sampath@evivehealth.com
+error:
+  report:
+    file:
+      path: "/opt/evive/var/ETLExceptions/"
+
+---
+spring:
+  profiles: test
+
+logging:
+  config: "classpath:log4j2-prod.xml"
+
+dump-path: "/opt/evive/var/ETLExceptions"
+etl:
+  compute-pcl: "https://ehealthreminders.net/recommender/pcl/compute"
+  pcl-base-url: "https://ehealthreminders.net/recommender/"
+notification-report:
+  path: "/opt/evive/var/reports/thd_notification_report"
+populate:
+  census:
+    variables:
+      url: https://ehealthreminders.net/recommender/census/variables/member/
+    retry: 3
+    email: raghu@evivehealth.com
+---
+spring:
+  profiles: production
+
+logging:
+  config: "classpath:log4j2-prod.xml"
+
+dump-path: "/opt/evive/var/ETLExceptions"
+etl:
+  compute-pcl: "https://myevive.com/recommender/pcl/compute"
+  pcl-base-url: "https://myevive.com/recommender/"
+notification-report:
+  path: "/opt/evive/var/reports/thd_notification_report"
+populate:
+  census:
+    variables:
+      url: https://myevive.com/recommender/census/variables/member/
+    retry: 3
+    email: raghu@evivehealth.com
+
